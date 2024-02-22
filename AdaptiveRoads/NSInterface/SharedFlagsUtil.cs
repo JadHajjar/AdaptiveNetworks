@@ -63,21 +63,21 @@ namespace AdaptiveRoads.NSInterface {
             return shared;
         }
 
-        public static ARCustomFlags GatherARCustomFlags(this NetInfo info) {
+        public static ARCustomFlags GatherARCustomFlags(this NetInfo? info) {
             CustomFlags all = info?.GetMetaData()?.UsedCustomFlags ?? CustomFlags.None;
 
-            ARCustomFlags ret = new ARCustomFlags(info.m_lanes.Length);
+            ARCustomFlags ret = new ARCustomFlags(info?.m_lanes.Length ?? 0);
             foreach (Enum flag in all) {
                 if (flag is NetLaneExt.Flags laneFlag) {
-                    for (int laneIndex = 0; laneIndex < info.m_lanes.Length; ++laneIndex) {
-                        string name = info.GetMetaData().CustomLaneFlagNames[laneIndex]?.GetorDefault(laneFlag);
+                    for (int laneIndex = 0; laneIndex < (info?.m_lanes.Length ?? 0); ++laneIndex) {
+                        var name = info?.GetMetaData()?.CustomLaneFlagNames[laneIndex]?.GetorDefault(laneFlag);
                         if (name != null) {
                             ret.Lanes[laneIndex] |= laneFlag;
                             break;
                         }
                     }
                 } else {
-                    string name = CustomFlagAttribute.GetName(flag, info);
+                    var name = CustomFlagAttribute.GetName(flag, info);
                     if (name != null) {
                         ret.AddFlag(flag);
                     }

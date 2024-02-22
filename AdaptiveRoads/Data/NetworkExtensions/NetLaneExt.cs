@@ -217,16 +217,23 @@ namespace AdaptiveRoads.Manager{
             TrackRenderData ret = default;
 
             try {
-                if (LaneData.LaneID < 0 || LaneData.LaneID >= NetUtil.netMan.m_lanes.m_buffer.Length)
+                if (LaneData.LaneID < 0 || LaneData.LaneID >= (NetUtil.netMan?.m_lanes?.m_buffer?.Length??0))
                     return ret;
 
                 ref var segment = ref LaneData.Segment;
                 NetInfo netInfo = segment.Info;
+
+                if (netInfo == null) return ret;
+
                 ref NetNode startNode = ref segment.m_startNode.ToNode();
                 ref NetNode endNode = ref segment.m_endNode.ToNode();
+
                 ref var bezier = ref LaneData.Lane.m_bezier;
                 ref var lane = ref LaneData.Lane;
                 var laneInfo = LaneData.LaneInfo;
+
+                if (laneInfo == null) return ret;
+
                 Vector3 startPos = bezier.a;
                 Vector3 endPos = bezier.d;
 
